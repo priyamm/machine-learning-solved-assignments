@@ -35,19 +35,22 @@ grad = zeros(size(theta));
 %           temp(1) = 0;   % because we don't add anything for j = 0
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
-ex = sigmoid(X * theta)
-theta_reg = [0;theta(2:end, :);];
 
-logResult = -y * log(ex') - (1-y) * log(1- ex');
-J = (1/m)* (sum(logResult) + (lambda/2) * theta_reg' * theta_reg) ;
 
-grad = (1/m)*sum((ex - y).*X) + (lambda/m) * theta_reg';
+
+prediction = X * theta;
+hypothesis = sigmoid(prediction);
+J = (1/m) * (sum( -(y' * log(hypothesis)) - ((1 - y') * log(1 - hypothesis))) + ((lambda / 2) * sum(theta(2:size(theta)) .^ 2)));
+grad(1) = (1/m) * sum((hypothesis - y) .* X(:, 1));
+grad(2:size(theta)) = ((1/m) * sum((hypothesis - y) .* X(:, 2:size(theta))))' + ((lambda / m) * theta(2:size(theta)));
+
+
 
 
 
 
 % =============================================================
 
-%grad = grad(:);
+grad = grad(:);
 
 end
