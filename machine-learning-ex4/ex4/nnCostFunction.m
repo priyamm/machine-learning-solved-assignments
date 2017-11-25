@@ -92,15 +92,27 @@ J = J / m;
 
 %Backpropagation
 
-  X_ = [ones(m, 1) X];
-  prediction1 = X_ * Theta1';
-  a2 = sigmoid(prediction1);
-  a2 = [ones(m, 1) a2];
-  prediction2 = a2 * Theta2';
-  a3 = sigmoid(prediction2);
-  s3 = a3 - y_;
-  s2 = Theta2' * s3 * sigmoidGradient(sigmoid(prediction2));
+delta1 = 0;
+delta2 = 0;
 
+for i = 1:m
+    a1 = [X_(i, :)];
+    prediction1 = a1 * Theta1';
+    a2 = sigmoid(prediction1);
+    a2 = [1 a2];
+    prediction2 = a2 * Theta2';
+    a3 = sigmoid(prediction2);
+
+    s3 = a3 - y_(i,:);
+
+    s2 = s3 * (Theta2' .* sigmoidGradient(prediction2))';
+    delta2 = delta2 + s3' * a2;
+    delta1 = delta1 + s2' * a1;
+end
+delta1 = delta1(2:end, :);
+
+Theta1_grad = delta1 /m;
+Theta2_grad = delta2 /m;
 
 
 reg = 0;
